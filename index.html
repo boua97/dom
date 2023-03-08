@@ -35,14 +35,20 @@
         ]
 
         let MyCart = document.getElementById("app")
-
+let totalVal = 0
+var id_div=0;
         Produits.forEach(Produit => {
+           
+            var d=document.createElement("div");
+            d.setAttribute("id",`d${id_div}`);
+            MyCart.appendChild(d);
+          
             let ProductImg = document.createElement("img")
-            let ProductPrice = document.createElement("p")
+            let Productprix = document.createElement("p")
             let ProductName = document.createElement("h1")
             ProductImg.setAttribute("src", Produit.img)
-            ProductPrice.innerHTML = Produit.prix +" Dh"
-            MyCart.appendChild(ProductPrice)
+            Productprix.innerHTML = Produit.prix +" Dh"
+            d.appendChild(Productprix)
           
          
 
@@ -51,39 +57,70 @@
                 Quantité.setAttribute('type', 'number')
                 Quantité.setAttribute('min', '1')
                 Quantité.setAttribute('value', '1')
-                MyCart.appendChild(Quantité);
+                d.appendChild(Quantité);
+
+        Quantité.addEventListener("change",(e)=>{
+            totalVal += e.target.value *Produit.prix
+            total.value = totalVal
+             })
 
             let remove = document.createElement('button')
                 remove.setAttribute('class', 'supprimer')
+                remove.setAttribute('id', `${id_div}`)
+                remove.setAttribute('onclick', ' deleteProduct(this.id)')
+               
                 remove.innerHTML = "Delete"
-                MyCart.appendChild(remove);
+                d.appendChild(remove);
 
-            MyCart.appendChild(ProductImg)
-            
+            d.appendChild(ProductImg)
+            id_div++;
 
-            
         }
         )
 
-        let total = document.createElement('input')
-        total.setAttribute('id', 'AAp')
-        MyCart.appendChild(total)
-    
-
-        function calculTotal() {
-            var som = 0;
-            for (var i = 0; i < inputQuantité.length; i++) {
-                var Quantité = inputQuantité[i].value
-                var prix = PrixUnitaire[i].textContent
-                var calcul = (Quantité * prix)
-                som = som+calcul;
-
-            }
-            document.getElementById('AAp').value = som
-
-        }
         
+//Créer un élément input avec l'ID "AAp" et l'ajouter à "MyCart"
+let total = document.createElement('input')
+total.setAttribute('id', 'AAp')
+total.setAttribute('value', 0)
+MyCart.appendChild(total)
+
+
+
+
+//Définir la fonction "calculTotal"
+function calculTotal() {
+    var som = 0;
+    //Parcourir tous les éléments avec la classe "inputQuantité"
+    for (var i = 0; i < inputQuantité.length; i++) {
+        var Quantité = inputQuantité[i].value
+        //Récupérer la valeur de l'élément "PrixUnitaire" correspondant
+        var prix = PrixUnitaire[i].textContent
+        //Calculer le sous-total
+        var calcul = (Quantité * prix)
+        //Ajouter le sous-total au total
+        som = som+calcul;
+    }
+    //Afficher le total dans l'élément avec l'ID "AAp"
+    document.getElementById('AAp').innerText= som;
+}
+
+
+
+
+function deleteProduct() {
+    var x=document.getElementById(event.srcElement.id);
+    el=document.getElementById(`d${parseInt(x.id)}`)
+    MyCart.removeChild(el);
+    calculTotal();
     
+}
+
+
+
+
+
+       
 
 
     </script>
